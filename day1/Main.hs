@@ -11,5 +11,7 @@ calculateFuels = map calculateFuel
 
 calculateFuel :: Integer -> Integer
 calculateFuel mass
-    | mass >= 9 = div mass 3 - 2 + calculateFuel (div mass 3 - 2)
+    | mass >= 9 = r + calculateFuel r
     | otherwise = 0
+    where
+        r = div mass 3 - 2
