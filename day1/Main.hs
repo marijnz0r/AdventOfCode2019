@@ -10,4 +10,6 @@ calculateFuels :: [Integer] -> [Integer]
 calculateFuels = map calculateFuel
 
 calculateFuel :: Integer -> Integer
-calculateFuel mass = div mass 3 - 2
+calculateFuel mass
+    | mass >= 9 = div mass 3 - 2 + calculateFuel (div mass 3 - 2)
+    | otherwise = 0
