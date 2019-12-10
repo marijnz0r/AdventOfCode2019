@@ -13,7 +13,7 @@ main = do
     let items = split ',' content
     let amount = length items
     let array = (listArray (1, amount) items)  // [(2, 12), (3, 2)]
-    putStrLn (show (computeIntCodes array 1))
+    putStrLn (show (runProgram array))
 
 computeIntCodes :: Intcodes -> Int -> Intcodes
 computeIntCodes input index
@@ -32,3 +32,6 @@ doMultiplication :: Intcodes -> Int -> Int -> Int -> Intcodes
 doMultiplication input firstIndex secondIndex resultIndex = input // [(position, result)]
     where result = (input ! (fromIntegral(input ! (firstIndex)+1))) * (input ! (fromIntegral(input ! (secondIndex)+1)))
           position = fromIntegral(input ! resultIndex) +1
+
+runProgram :: Intcodes -> Int
+runProgram input = fromIntegral ((computeIntCodes input (fromIntegral 1)) ! 1)
