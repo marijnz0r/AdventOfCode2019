@@ -1,27 +1,34 @@
+import Data.Array
+
+-- Define Intcodes as an Array of Integers indexed by Int
+type Intcodes = Array Int Integer
+
 split :: Char -> String -> [Integer]
 split _ "" = []
 split c s = read firstWord : (split c rest)
     where firstWord = takeWhile (/=c) s
           rest = drop (length firstWord + 1) s
-
-data Operation = Add | Multiply | Halt deriving (Show)
-
 main = do
     content <- readFile "input"
     let items = split ',' content
-    -- putStr (show items)
-    putStrLn (show (computeIntCodes [1,0,0,3,99]))
+    let amount = length items
+    let array = (listArray (1, amount) items)  // [(2, 12), (3, 2)]
+    putStrLn (show (computeIntCodes array 1))
 
-computeIntCodes :: [Integer] -> Integer
-computeIntCodes input = computeSingleResult operation (input !! 1) (input !! 2)
-    where operation = determineOperation (head input)
+computeIntCodes :: Intcodes -> Int -> Intcodes
+computeIntCodes input index
+    | indexValue == 99 = input
+    | indexValue == 1 = computeIntCodes (doAddition input (index + 1) (index + 2) (index + 3)) (index + 4)
+    | indexValue == 2 = computeIntCodes (doMultiplication input (index + 1) (index + 2) (index + 3)) (index + 4)
+    where indexValue = input ! index
+computeIntCodes a _ = a
 
-determineOperation :: Integer -> Operation
-determineOperation 1 = Add
-determineOperation 2 = Multiply
-determineOperation 99 = Halt
+doAddition :: Intcodes -> Int -> Int -> Int -> Intcodes
+doAddition input firstIndex secondIndex resultIndex = input // [(position, result)]
+    where result = input ! (fromIntegral((input ! (firstIndex)+1))) + input ! (fromIntegral(((input ! (secondIndex)+1))))
+          position = fromIntegral(input ! resultIndex)+1
 
-computeSingleResult :: Operation -> Integer -> Integer -> Integer
-computeSingleResult Add a b = a + b
-computeSingleResult Multiply a b = a * b
-computeSingleResult Halt _ _ = 0
+doMultiplication :: Intcodes -> Int -> Int -> Int -> Intcodes
+doMultiplication input firstIndex secondIndex resultIndex = input // [(position, result)]
+    where result = (input ! (fromIntegral(input ! (firstIndex)+1))) * (input ! (fromIntegral(input ! (secondIndex)+1)))
+          position = fromIntegral(input ! resultIndex) +1
