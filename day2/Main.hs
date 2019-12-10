@@ -12,8 +12,12 @@ main = do
     content <- readFile "input"
     let items = split ',' content
     let amount = length items
-    let array = (listArray (1, amount) items)  // [(2, 12), (3, 2)]
-    putStrLn (show (runProgram array))
+    let array = (listArray (1, amount) items)
+    let correctPrograms =
+            filter
+            (\(_noun, _verb, newArray) -> runProgram newArray == 19690720)
+            [ (noun, verb, array // [(2, noun), (3, verb)]) | noun <- [0 .. 99], verb <- [0 .. 99] ]
+    print $ map (\(noun, verb, _) -> 100 * noun + verb) correctPrograms
 
 computeIntCodes :: Intcodes -> Int -> Intcodes
 computeIntCodes input index
