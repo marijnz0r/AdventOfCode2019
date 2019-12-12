@@ -13,8 +13,8 @@ main = do
     let secondWire = splitOn "," (wires !! 1)
     let firstWireInstructions = map parseInstruction firstWire
     let secondWireInstructions = map parseInstruction secondWire
-    let firstWireMap = Map.fromList [(0,0)]
-    putStrLn $ show firstWireInstructions 
+    let firstWirePoints = [(0,0)]
+    putStrLn $ show firstWireInstructions
     -- putStrLn $ show $ map parseInstruction firstWire
 
 parseInstruction :: String -> Instruction
@@ -27,4 +27,11 @@ parseDirection 'L' = Main.Left
 parseDirection 'R' = Main.Right
 
 addPoint :: [Point] -> Point -> [Point]
-addPoint points point = points : point
+addPoint points point = points ++ [point]
+
+incrementPoint :: Point -> Direction -> Point
+incrementPoint point Up = (fst point, (snd point) + 1)  
+incrementPoint point Down = (fst point, (snd point) - 1)  
+incrementPoint point Main.Left = ((fst point) - 1, snd point)  
+incrementPoint point Main.Right = ((fst point) + 1, snd point)  
+
